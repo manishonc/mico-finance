@@ -7,6 +7,7 @@ import {
   useReactTable,
   getSortedRowModel,
   SortingState,
+  ColumnSizingState,
 } from '@tanstack/react-table'
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { useState } from 'react'
@@ -33,6 +34,7 @@ const columnHelper = createColumnHelper<Transaction>()
 
 function RouteComponent() {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({})
   const queryClient = useQueryClient()
 
   const { data, isLoading, error } = useQuery<TransactionsResponse>({
@@ -63,19 +65,32 @@ function RouteComponent() {
   const columns = [
     columnHelper.accessor('date', {
       header: 'Date',
+      size: 160,
+      minSize: 120,
       cell: (info) => {
         const value = info.getValue()
-        const dateStr = new Date(value).toLocaleDateString('en-US', {
+        const dateObj = new Date(value)
+        const dateStr = dateObj.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
         })
+        const isoDate = Number.isNaN(dateObj.getTime())
+          ? ''
+          : dateObj.toISOString().slice(0, 10)
         return (
           <EditableCell
-            value={dateStr}
+            value={isoDate}
+            displayValue={dateStr}
+            type="date"
             onSave={async (newValue) => {
               const transaction = info.row.original
-              await updateTransactionMutation.mutateAsync({ id: transaction.id, date: newValue as string })
+              if (!newValue) return
+              const isoTimestamp = new Date(newValue as string).toISOString()
+              await updateTransactionMutation.mutateAsync({
+                id: transaction.id,
+                date: isoTimestamp,
+              })
             }}
             className="text-gray-900"
           />
@@ -84,6 +99,8 @@ function RouteComponent() {
     }),
     columnHelper.accessor('category', {
       header: 'Category',
+      size: 180,
+      minSize: 120,
       cell: (info) => {
         const value = info.getValue()
         const transaction = info.row.original
@@ -99,6 +116,8 @@ function RouteComponent() {
     }),
     columnHelper.accessor('description', {
       header: 'Description',
+      size: 260,
+      minSize: 160,
       cell: (info) => {
         const value = info.getValue()
         const transaction = info.row.original
@@ -114,6 +133,8 @@ function RouteComponent() {
     }),
     columnHelper.accessor('amount', {
       header: 'Amount',
+      size: 140,
+      minSize: 110,
       cell: (info) => {
         const value = info.getValue()
         const transaction = info.row.original
@@ -140,10 +161,13 @@ function RouteComponent() {
     columns,
     state: {
       sorting,
+      columnSizing,
     },
     onSortingChange: setSorting,
+    onColumnSizingChange: setColumnSizing,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    columnResizeMode: 'onChange',
   })
 
   if (isLoading) {
@@ -187,17 +211,18 @@ function RouteComponent() {
           <div className="p-8 text-center text-sm text-gray-500">No transactions</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-50 transition-colors"
+                        className="relative px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-50 transition-colors"
                         onClick={header.column.getToggleSortingHandler()}
+                        style={{ width: header.getSize() }}
                       >
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 pr-2">
                           {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -211,6 +236,13 @@ function RouteComponent() {
                             <ArrowUpDown className="w-3.5 h-3.5 opacity-30" />
                           )}
                         </div>
+                        {header.column.getCanResize() ? (
+                          <div
+                            onMouseDown={header.getResizeHandler()}
+                            onTouchStart={header.getResizeHandler()}
+                            className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none"
+                          />
+                        ) : null}
                       </th>
                     ))}
                   </tr>
@@ -226,6 +258,7 @@ function RouteComponent() {
                       <td
                         key={cell.id}
                         className="px-4 py-2.5 text-sm text-gray-700"
+                        style={{ width: cell.column.getSize() }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>

@@ -20,7 +20,11 @@ app.get('/api/transactions', async (c) => {
 app.put('/api/transactions/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
-  await updateTransaction({ id, ...body });
+  const updates = { ...body };
+  if (typeof updates.date === 'string') {
+    updates.date = new Date(updates.date);
+  }
+  await updateTransaction({ id, ...updates });
   return c.json({ success: true });
 })
 

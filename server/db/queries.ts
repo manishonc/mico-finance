@@ -10,8 +10,14 @@ export const createTransaction = async (transaction: typeof transactionsTable.$i
     return await db.insert(transactionsTable).values(transaction);
 };
 
-export const updateTransaction = async (transaction: typeof transactionsTable.$inferSelect & { id: string }) => {
-    return await db.update(transactionsTable).set(transaction).where(eq(transactionsTable.id, transaction.id));
+type UpdateTransactionInput = Partial<typeof transactionsTable.$inferInsert> & { id: string };
+
+export const updateTransaction = async (transaction: UpdateTransactionInput) => {
+    const { id, ...updates } = transaction;
+    if (updates.date && typeof updates.date === "string") {
+        updates.date = new Date(updates.date);
+    }
+    return await db.update(transactionsTable).set(updates).where(eq(transactionsTable.id, id));
 };
 
 export const deleteTransaction = async (id: string) => {
