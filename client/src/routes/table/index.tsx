@@ -144,13 +144,13 @@ function RouteComponent() {
         cell: (info) => {
           const status = info.getValue() as string
           const statusColors = {
-            completed: 'bg-green-500/20 text-green-400',
-            pending: 'bg-yellow-500/20 text-yellow-400',
-            failed: 'bg-red-500/20 text-red-400',
+            completed: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+            pending: 'bg-amber-50 text-amber-700 border border-amber-200',
+            failed: 'bg-rose-50 text-rose-700 border border-rose-200',
           }
           return (
             <span
-              className={`px-2 py-1 rounded text-xs font-medium ${
+              className={`px-2 py-0.5 rounded text-xs font-medium ${
                 statusColors[status as keyof typeof statusColors]
               }`}
             >
@@ -189,26 +189,26 @@ function RouteComponent() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
+    <div className="min-h-screen bg-white py-12 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">
+              <h1 className="text-3xl font-semibold text-gray-900 mb-1">
                 Financial Transactions
               </h1>
-              <p className="text-gray-400">
+              <p className="text-gray-500 text-sm">
                 View and manage your financial transactions
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-500">
                 Showing{' '}
-                <span className="text-cyan-400 font-semibold">
+                <span className="text-gray-900 font-medium">
                   {table.getFilteredRowModel().rows.length}
                 </span>{' '}
                 of{' '}
-                <span className="text-gray-300">
+                <span className="text-gray-700">
                   {table.getCoreRowModel().rows.length}
                 </span>{' '}
                 transactions
@@ -216,25 +216,25 @@ function RouteComponent() {
               {columnFilters.length > 0 && (
                 <button
                   onClick={() => setColumnFilters([])}
-                  className="mt-2 px-4 py-2 text-sm bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                  className="mt-2 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
                 >
-                  Clear Filters
+                  Clear filters
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden">
+        <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/80 border-b border-slate-700">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
+                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         {header.isPlaceholder
                           ? null
@@ -247,59 +247,75 @@ function RouteComponent() {
                   </tr>
                 ))}
                 {/* Filter row */}
-                <tr className="bg-slate-800/60 border-b border-slate-700">
+                <tr className="bg-white border-b border-gray-100">
                   {table.getHeaderGroups()[0].headers.map((header) => {
                     const column = header.column
                     const filterValue = column.getFilterValue() as string
                     const columnId = column.id
 
                     return (
-                      <td key={header.id} className="px-6 py-3">
+                      <td key={header.id} className="px-3 py-2">
                         {columnId === 'category' ? (
-                          <select
-                            value={filterValue ?? ''}
-                            onChange={(e) =>
-                              column.setFilterValue(
-                                e.target.value === '' ? undefined : e.target.value
-                              )
-                            }
-                            className="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                          >
-                            <option value="">All Categories</option>
-                            {categories.map((cat) => (
-                              <option key={cat} value={cat}>
-                                {cat}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="relative">
+                            <select
+                              value={filterValue ?? ''}
+                              onChange={(e) =>
+                                column.setFilterValue(
+                                  e.target.value === '' ? undefined : e.target.value
+                                )
+                              }
+                              className="w-full px-3 py-1.5 text-sm bg-white border border-gray-200 rounded text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 appearance-none cursor-pointer pr-8"
+                              style={{
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'right 6px center',
+                                backgroundSize: '16px',
+                              }}
+                            >
+                              <option value="">All</option>
+                              {categories.map((cat) => (
+                                <option key={cat} value={cat}>
+                                  {cat}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                         ) : columnId === 'status' ? (
-                          <select
-                            value={filterValue ?? ''}
-                            onChange={(e) =>
-                              column.setFilterValue(
-                                e.target.value === '' ? undefined : e.target.value
-                              )
-                            }
-                            className="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                          >
-                            <option value="">All Statuses</option>
-                            {statuses.map((status) => (
-                              <option key={status} value={status}>
-                                {status.charAt(0).toUpperCase() + status.slice(1)}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="relative">
+                            <select
+                              value={filterValue ?? ''}
+                              onChange={(e) =>
+                                column.setFilterValue(
+                                  e.target.value === '' ? undefined : e.target.value
+                                )
+                              }
+                              className="w-full px-3 py-1.5 text-sm bg-white border border-gray-200 rounded text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 appearance-none cursor-pointer pr-8"
+                              style={{
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'right 6px center',
+                                backgroundSize: '16px',
+                              }}
+                            >
+                              <option value="">All</option>
+                              {statuses.map((status) => (
+                                <option key={status} value={status}>
+                                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                         ) : columnId === 'amount' ? (
                           <input
-                            type="number"
+                            type="text"
                             value={filterValue ?? ''}
                             onChange={(e) =>
                               column.setFilterValue(
                                 e.target.value === '' ? undefined : e.target.value
                               )
                             }
-                            placeholder="Filter amount..."
-                            className="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-lg text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                            placeholder="Filter"
+                            className="w-full px-3 py-1.5 text-sm bg-white border border-gray-200 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300"
                           />
                         ) : (
                           <input
@@ -310,8 +326,8 @@ function RouteComponent() {
                                 e.target.value === '' ? undefined : e.target.value
                               )
                             }
-                            placeholder={`Filter ${columnId}...`}
-                            className="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-lg text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                            placeholder="Filter"
+                            className="w-full px-3 py-1.5 text-sm bg-white border border-gray-200 rounded text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300"
                           />
                         )}
                       </td>
@@ -319,16 +335,16 @@ function RouteComponent() {
                   })}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700">
+              <tbody className="divide-y divide-gray-100">
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="hover:bg-slate-700/50 transition-colors duration-150"
+                    className="hover:bg-gray-50 transition-colors duration-75"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-300"
+                        className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-700"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
