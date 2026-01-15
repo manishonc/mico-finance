@@ -1,9 +1,9 @@
-import { eq, sum } from "drizzle-orm";
+import { eq, sum, desc } from "drizzle-orm";
 import { db } from ".";
 import { transactionsTable } from "./schema";
 
 export const getTransactions = async () => {
-    return await db.select().from(transactionsTable);
+    return await db.select().from(transactionsTable).orderBy(desc(transactionsTable.date));
 };
 
 export const createTransaction = async (transaction: typeof transactionsTable.$inferInsert) => {

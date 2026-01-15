@@ -52,7 +52,37 @@ function RouteComponent() {
         body: JSON.stringify(body),
       })
     },
-    onSuccess: () => {
+    onMutate: async (updates) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['transactions'] })
+
+      // Snapshot the previous value
+      const previousData = queryClient.getQueryData<TransactionsResponse>(['transactions'])
+
+      // Optimistically update the cache
+      if (previousData) {
+        queryClient.setQueryData<TransactionsResponse>(['transactions'], (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            transactions: old.transactions.map((t) =>
+              t.id === updates.id ? { ...t, ...updates } : t
+            ),
+          }
+        })
+      }
+
+      // Return context with the snapshot
+      return { previousData }
+    },
+    onError: (_err, _updates, context) => {
+      // Rollback to previous value on error
+      if (context?.previousData) {
+        queryClient.setQueryData(['transactions'], context.previousData)
+      }
+    },
+    onSettled: () => {
+      // Refetch to ensure we have the latest data
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
     },
   })

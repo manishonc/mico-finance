@@ -17,11 +17,16 @@ export function EditableCell({
 }: EditableCellProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState(value)
+  const [isSaving, setIsSaving] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    setEditValue(value)
-  }, [value])
+    // Only update editValue if we're not currently editing or saving
+    // This prevents the flash when the value prop updates after save
+    if (!isEditing && !isSaving) {
+      setEditValue(value)
+    }
+  }, [value, isEditing, isSaving])
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -32,9 +37,18 @@ export function EditableCell({
 
   const handleSave = async () => {
     if (editValue !== value) {
-      await onSave(editValue)
+      setIsSaving(true)
+      setIsEditing(false)
+      try {
+        await onSave(editValue)
+        // Give React a moment to process the optimistic update
+        await new Promise(resolve => setTimeout(resolve, 0))
+      } finally {
+        setIsSaving(false)
+      }
+    } else {
+      setIsEditing(false)
     }
-    setIsEditing(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -70,7 +84,9 @@ export function EditableCell({
     )
   }
 
-  const renderedValue = displayValue ?? value
+  // While saving, show the editValue to prevent flash of old value
+  // Once value prop updates (from optimistic update), it will show the new value
+  const renderedValue = isSaving ? editValue : (displayValue ?? value)
 
   return (
     <div
