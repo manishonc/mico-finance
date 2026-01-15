@@ -1,0 +1,12 @@
+{
+  "name": "mico-finance",
+  "scripts": {
+    "dev": "bun run --hot server/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.11.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
