@@ -16,6 +16,15 @@ export const getRouter = () => {
     },
 
     defaultPreload: 'intent',
+
+    defaultNotFoundComponent: () => {
+      return (
+        <div className="p-4">
+          <h1 className="text-xl font-bold mb-2">404 - Page Not Found</h1>
+          <p>The page you're looking for doesn't exist.</p>
+        </div>
+      )
+    },
   })
 
   setupRouterSsrQueryIntegration({ router, queryClient: rqContext.queryClient })
