@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AuthLayout, AuthCard, LoginForm, SignupForm } from '../components';
+import { authClient } from '@/lib/auth-clients';
 
 type AuthMode = 'login' | 'signup';
 
@@ -8,12 +9,19 @@ export default function AuthenticationScreen() {
 
   const handleLoginSubmit = (data: { email: string; password: string }) => {
     console.log('Login submit:', data);
-    // TODO: Connect to login API
+    authClient.signIn.email({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   const handleSignupSubmit = (data: { name: string; email: string; password: string; confirmPassword: string }) => {
     console.log('Signup submit:', data);
-    // TODO: Connect to signup API
+    authClient.signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
   };
 
   const handleGoogleLogin = () => {

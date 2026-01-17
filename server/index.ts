@@ -1,52 +1,73 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity } from './db/queries'
+import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity, readEntityByUser } from './db/queries'
 import { auth } from './lib/auth';
+import { authMiddleware } from './middleware/aut.middleware';
+import { HonoEnv } from './types';
 
-const app = new Hono()
 
-// Auth endpoints
+const app = new Hono<HonoEnv>()
+
+app.use(
+  '/api/*',
+  cors({
+    origin: ['http://localhost:5000', 'http://localhost:3000'],
+    credentials: true,
+  })
+)
+
+// Auth endpoints - better-auth handles its own CORS
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
-// CORS middleware
-app.use('/*', cors())
 
 // Root endpoint
 app.get('/', (c) => {
   return c.text('Welcome to the Mico Finance API')
 })
 
-// Entity CRUD endpoints
+// Entity CRUD endpoints - protected routes
+app.use('/api/entities/*', authMiddleware);
+
 app.get('/api/entities', async (c) => {
-  const entities = await readEntity();
+  const entities = await readEntityByUser(c.get("user").id);
   return c.json({ entities });
 })
 
 app.get('/api/entities/:id', async (c) => {
   const id = c.req.param('id');
-  const entity = await readEntityById(id);
-  return c.json({ entity: entity[0] || null });
+  const entity = await readEntityByUser(c.get("user").id);
+  const filtered = entity.filter(e => e.id === id);
+  return c.json({ entity: filtered[0] || null });
 })
 
 app.post('/api/entities', async (c) => {
   const body = await c.req.json();
-  await createEntity(body);
+  await createEntity({ ...body, userId: c.get("user").id });
   return c.json({ success: true });
 })
 
 app.put('/api/entities/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
-  await updateEntity(id, body);
+  await updateEntity(id, { ...body, userId: c.get("user").id });
   return c.json({ success: true });
 })
 
 app.delete('/api/entities/:id', async (c) => {
   const id = c.req.param('id');
-  await deleteEntity(id);
+  await deleteEntity(id, c.get("user").id);
   return c.json({ success: true });
 })
 
-export type AppType = typeof app
 
-export default app
+
+
+// read entity by user
+app.get('/api/entities/user', async (c) => {
+  const entities = await readEntityByUser(c.get("user").id);
+  return c.json({ entities });
+});
+
+export type AppType = typeof app;
+
+export default app;

@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from ".";
 import { entityTable } from "./schemas/schema";
 
@@ -18,6 +18,10 @@ export const updateEntity = async (id: string, updates: Partial<typeof entityTab
   return await db.update(entityTable).set(updates).where(eq(entityTable.id, id));
 };
 
-export const deleteEntity = async (id: string) => {
-  return await db.delete(entityTable).where(eq(entityTable.id, id));
+export const deleteEntity = async (id: string, userId: string) => {
+  return await db.delete(entityTable).where(and(eq(entityTable.id, id), eq(entityTable.userId, userId)));
+};
+
+export const readEntityByUser = async (userId: string) => {
+  return await db.select().from(entityTable).where(eq(entityTable.userId, userId));
 };

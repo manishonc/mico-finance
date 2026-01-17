@@ -14,5 +14,12 @@ export const auth = betterAuth({
     },
     plugins: [ 
         openAPI(), 
-    ] 
+    ],
+    advanced: {
+        cookiePrefix: "mico-finance",
+    },
+    trustedOrigins: 
+        [
+            "http://localhost:5000",
+    ],
 });
