@@ -21,7 +21,9 @@ interface Entity {
 const API_URL = 'http://localhost:3000'
 
 const fetchEntities = async (): Promise<Entity[]> => {
-  const res = await fetch(`${API_URL}/api/entities`)
+  const res = await fetch(`${API_URL}/api/entities`, {
+    credentials: 'include',
+  })
   const data = await res.json()
   return data.entities || []
 }
@@ -31,6 +33,7 @@ const createEntity = async (entity: { type: string; name: string }) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(entity),
+    credentials: 'include',
   })
   return res.json()
 }
@@ -40,6 +43,7 @@ const updateEntity = async (id: string, updates: { type?: string; name?: string 
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updates),
+    credentials: 'include',
   })
   return res.json()
 }
@@ -47,6 +51,7 @@ const updateEntity = async (id: string, updates: { type?: string; name?: string 
 const deleteEntity = async (id: string) => {
   const res = await fetch(`${API_URL}/api/entities/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
   })
   return res.json()
 }
