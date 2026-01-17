@@ -1,13 +1,19 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity } from './db/queries'
+import { auth } from './lib/auth';
 
 const app = new Hono()
 
+// Auth endpoints
+app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
+// CORS middleware
 app.use('/*', cors())
 
+// Root endpoint
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.text('Welcome to the Mico Finance API')
 })
 
 // Entity CRUD endpoints

@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from ".";
-import { entityTable } from "./schema";
+import { entityTable } from "./schemas/schema";
 
 export const createEntity = async (entity: typeof entityTable.$inferInsert) => {
   return await db.insert(entityTable).values(entity);
