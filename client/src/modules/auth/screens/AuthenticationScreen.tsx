@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 // --- Assets & Icons ---
 
@@ -196,7 +198,7 @@ export default function AuthenticationScreen() {
           </h1>
           
           <p className="text-sm text-gray-500 mb-8">
-            Don't have an account yet? <a href="#" className="text-gray-300 hover:text-white transition-colors font-medium">Sing up</a>
+            Don't have an account yet? <a href="#" className="text-gray-300 hover:text-white transition-colors font-medium">Sign up</a>
           </p>
 
           <div className="w-full space-y-4">
@@ -206,7 +208,7 @@ export default function AuthenticationScreen() {
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white">
                 <Mail size={18} />
               </div>
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -220,7 +222,7 @@ export default function AuthenticationScreen() {
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white">
                 <Lock size={18} />
               </div>
-              <input
+              <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -230,9 +232,11 @@ export default function AuthenticationScreen() {
             </div>
 
             {/* Login Button */}
-            <button className="w-full bg-primary hover:bg-primary-hover text-white text-sm font-medium py-3 rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(0,112,243,0.3)] hover:shadow-[0_0_25px_rgba(0,112,243,0.5)] active:scale-[0.98]">
+            <Button 
+              className="w-full bg-primary hover:bg-primary-hover text-white text-sm font-medium py-3 rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(0,112,243,0.3)] hover:shadow-[0_0_25px_rgba(0,112,243,0.5)] active:scale-[0.98]"
+            >
               Login
-            </button>
+            </Button>
 
             {/* Divider */}
             <div className="relative py-4">
