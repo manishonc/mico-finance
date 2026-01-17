@@ -2,10 +2,12 @@
   "name": "mico-finance",
   "scripts": {
     "dev": "bun run --hot server/index.ts",
+    "client:run": "cd client && bun run dev",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "bun run scripts/seed-local-db.script.ts"
+
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
