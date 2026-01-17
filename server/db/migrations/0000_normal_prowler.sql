@@ -1,6 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS "public";
---> statement-breakpoint
-CREATE SCHEMA IF NOT EXISTS "auth";
+CREATE SCHEMA "auth";
 --> statement-breakpoint
 CREATE TABLE "auth"."account" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -50,14 +48,16 @@ CREATE TABLE "auth"."verification" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "public"."entity" (
+CREATE TABLE "entity" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text NOT NULL,
 	"type" text NOT NULL,
 	"name" text NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "auth"."account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "auth"."session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "entity" ADD CONSTRAINT "entity_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "account_userId_idx" ON "auth"."account" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "auth"."session" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "auth"."verification" USING btree ("identifier");
