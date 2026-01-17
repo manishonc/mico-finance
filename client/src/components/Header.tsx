@@ -2,9 +2,12 @@ import { Link } from '@tanstack/react-router'
 
 import { useState } from 'react'
 import { Home, Menu, Wallet, X } from 'lucide-react'
+import { LogoutButton } from './LogoutButton'
+import { authClient } from '@/lib/auth-clients'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const { data: session } = authClient.useSession()
 
   return (
     <>
@@ -66,6 +69,12 @@ export default function Header() {
             <span className="font-medium">Finance</span>
           </Link>
         </nav>
+
+        {session && (
+          <div className="p-4 border-t border-gray-700">
+            <LogoutButton />
+          </div>
+        )}
       </aside>
     </>
   )

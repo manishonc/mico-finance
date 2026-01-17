@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { AuthLayout, AuthCard, LoginForm, SignupForm } from '../components';
 import { authClient } from '@/lib/auth-clients';
 
@@ -6,22 +7,35 @@ type AuthMode = 'login' | 'signup';
 
 export default function AuthenticationScreen() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const navigate = useNavigate();
 
-  const handleLoginSubmit = (data: { email: string; password: string }) => {
-    console.log('Login submit:', data);
-    authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-    });
+  const handleLoginSubmit = async (data: { email: string; password: string }) => {
+    try {
+      console.log('Login submit:', data);
+      await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+      });
+      // Navigate to dashboard on successful login
+      navigate({ to: '/finance/dashboard', replace: true });
+    } catch (error) {
+      console.error('Login error:', error);
+    }
   };
 
-  const handleSignupSubmit = (data: { name: string; email: string; password: string; confirmPassword: string }) => {
-    console.log('Signup submit:', data);
-    authClient.signUp.email({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    });
+  const handleSignupSubmit = async (data: { name: string; email: string; password: string; confirmPassword: string }) => {
+    try {
+      console.log('Signup submit:', data);
+      await authClient.signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+      // Navigate to dashboard on successful signup
+      navigate({ to: '/finance/dashboard', replace: true });
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
 
   const handleGoogleLogin = () => {
