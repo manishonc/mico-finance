@@ -6,14 +6,16 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "bun run scripts/seed-local-db.script.ts"
-
+    "db:seed": "bun run scripts/seed-local-db.script.ts",
+    "db:up": "docker compose up -d"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
+    "better-auth": "^1.4.13",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
-    "hono": "^4.11.4"
+    "hono": "^4.11.4",
+    "pg": "^8.17.1"
   },
   "devDependencies": {
     "@types/bun": "latest",

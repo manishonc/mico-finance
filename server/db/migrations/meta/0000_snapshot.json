@@ -1,11 +1,11 @@
 {
-  "id": "c61613c1-301e-454b-acb6-4320191a9fa3",
+  "id": "b26d39ef-2dfa-4246-a656-29431fc7ecb3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.transactions": {
-      "name": "transactions",
+    "public.entity": {
+      "name": "entity",
       "schema": "",
       "columns": {
         "id": {
@@ -15,32 +15,14 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "date": {
-          "name": "date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
+        "type": {
+          "name": "type",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "amount": {
-          "name": "amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true

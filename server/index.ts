@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { getTransactions, getTransactionWithTotalAmount, updateTransaction, createTransaction, getTransactionsByDateRange, getTransactionsByCategory, getTransactionSummary } from './db/queries'
+import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity } from './db/queries'
 
 const app = new Hono()
 
@@ -10,50 +10,34 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-// Transactions
-app.get('/api/transactions', async (c) => {
-  const transactions = await getTransactions();
-  const totalAmount = await getTransactionWithTotalAmount();
-  return c.json({ transactions, totalAmount });
+// Entity CRUD endpoints
+app.get('/api/entities', async (c) => {
+  const entities = await readEntity();
+  return c.json({ entities });
 })
 
-app.post('/api/transactions', async (c) => {
+app.get('/api/entities/:id', async (c) => {
+  const id = c.req.param('id');
+  const entity = await readEntityById(id);
+  return c.json({ entity: entity[0] || null });
+})
+
+app.post('/api/entities', async (c) => {
   const body = await c.req.json();
-  // Convert date string to Date object for Drizzle ORM
-  if (typeof body.date === 'string') {
-    body.date = new Date(body.date);
-  }
-  await createTransaction(body);
+  await createEntity(body);
   return c.json({ success: true });
 })
 
-// Query transactions with filters
-app.post('/api/transactions/query', async (c) => {
-  const body = await c.req.json();
-  const { startDate, endDate, category } = body;
-
-  let start: Date | undefined;
-  let end: Date | undefined;
-
-  if (startDate) {
-    start = new Date(startDate);
-  }
-  if (endDate) {
-    end = new Date(endDate);
-  }
-
-  const summary = await getTransactionSummary(start, end, category);
-  return c.json({ summary: summary[0] || { totalAmount: null, count: 0 } });
-})
-
-app.put('/api/transactions/:id', async (c) => {
+app.put('/api/entities/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
-  const updates = { ...body };
-  if (typeof updates.date === 'string') {
-    updates.date = new Date(updates.date);
-  }
-  await updateTransaction({ id, ...updates });
+  await updateEntity(id, body);
+  return c.json({ success: true });
+})
+
+app.delete('/api/entities/:id', async (c) => {
+  const id = c.req.param('id');
+  await deleteEntity(id);
   return c.json({ success: true });
 })
 

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { useState } from 'react'
-import { Home, Menu, Table, X } from 'lucide-react'
+import { Home, Menu, Wallet, X } from 'lucide-react'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,7 +18,7 @@ export default function Header() {
         </button>
         <h1 className="ml-4 text-xl font-semibold">
           <Link to="/" className="text-white hover:text-cyan-400 transition-colors">
-            Mico Finance
+            Life OS
           </Link>
         </h1>
       </header>
@@ -54,7 +54,7 @@ export default function Header() {
           </Link>
 
           <Link
-            to="/transaction"
+            to="/finance/dashboard"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
             activeProps={{
@@ -62,8 +62,8 @@ export default function Header() {
                 'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
             }}
           >
-            <Table size={20} />
-            <span className="font-medium">Transactions</span>
+            <Wallet size={20} />
+            <span className="font-medium">Finance</span>
           </Link>
         </nav>
       </aside>
