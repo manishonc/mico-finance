@@ -38,9 +38,15 @@ export default function AuthenticationScreen() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Google login');
-    // TODO: Connect to Google OAuth
+  const handleGoogleLogin = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.origin}/finance/dashboard`,
+      });
+    } catch (error) {
+      console.error('Google login error:', error);
+    }
   };
 
   const handleAppleLogin = () => {

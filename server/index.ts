@@ -17,7 +17,9 @@ app.use(
 )
 
 // Auth endpoints - better-auth handles its own CORS
-app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  return auth.handler(c.req.raw);
+});
 
 
 // Root endpoint
