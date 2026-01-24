@@ -7,7 +7,15 @@ import { authClient } from '@/lib/auth-clients'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
-  const { data: session } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
+
+  if (isPending) {
+    return null
+  }
+
+  if (!session) {
+    return null
+  }
 
   return (
     <>
