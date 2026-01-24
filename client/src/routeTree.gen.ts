@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as FinanceEntityIndexRouteImport } from './routes/finance/entity/index'
+import { Route as FinanceEntityTypeIndexRouteImport } from './routes/finance/entity-type/index'
 import { Route as FinanceDashboardIndexRouteImport } from './routes/finance/dashboard/index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
@@ -41,6 +42,11 @@ const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
 const FinanceEntityIndexRoute = FinanceEntityIndexRouteImport.update({
   id: '/finance/entity/',
   path: '/finance/entity/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceEntityTypeIndexRoute = FinanceEntityTypeIndexRouteImport.update({
+  id: '/finance/entity-type/',
+  path: '/finance/entity-type/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinanceDashboardIndexRoute = FinanceDashboardIndexRouteImport.update({
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/finance/dashboard': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type': typeof FinanceEntityTypeIndexRoute
   '/finance/entity': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/finance/dashboard': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type': typeof FinanceEntityTypeIndexRoute
   '/finance/entity': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/finance/dashboard/': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type/': typeof FinanceEntityTypeIndexRoute
   '/finance/entity/': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
     | '/finance/dashboard'
+    | '/finance/entity-type'
     | '/finance/entity'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
     | '/finance/dashboard'
+    | '/finance/entity-type'
     | '/finance/entity'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
     | '/finance/dashboard/'
+    | '/finance/entity-type/'
     | '/finance/entity/'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
   FinanceDashboardIndexRoute: typeof FinanceDashboardIndexRoute
+  FinanceEntityTypeIndexRoute: typeof FinanceEntityTypeIndexRoute
   FinanceEntityIndexRoute: typeof FinanceEntityIndexRoute
   DemoStartSsrDataOnlyRoute: typeof DemoStartSsrDataOnlyRoute
   DemoStartSsrFullSsrRoute: typeof DemoStartSsrFullSsrRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/finance/entity'
       fullPath: '/finance/entity'
       preLoaderRoute: typeof FinanceEntityIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance/entity-type/': {
+      id: '/finance/entity-type/'
+      path: '/finance/entity-type'
+      fullPath: '/finance/entity-type'
+      preLoaderRoute: typeof FinanceEntityTypeIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/finance/dashboard/': {
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
   FinanceDashboardIndexRoute: FinanceDashboardIndexRoute,
+  FinanceEntityTypeIndexRoute: FinanceEntityTypeIndexRoute,
   FinanceEntityIndexRoute: FinanceEntityIndexRoute,
   DemoStartSsrDataOnlyRoute: DemoStartSsrDataOnlyRoute,
   DemoStartSsrFullSsrRoute: DemoStartSsrFullSsrRoute,

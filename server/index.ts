@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity, readEntityByUser } from './db/queries'
+import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity, readEntityByUser, createEntityType, readEntityTypeByUser, readEntityTypeById, updateEntityType, deleteEntityType } from './db/queries'
 import { auth } from './lib/auth';
 import { authMiddleware } from './middleware/aut.middleware';
 import { HonoEnv } from './types';
@@ -67,6 +67,50 @@ app.get('/api/entities/user', async (c) => {
   const entities = await readEntityByUser(c.get("user").id);
   return c.json({ entities });
 });
+
+// EntityType CRUD endpoints - protected routes
+app.use('/api/entity-types/*', authMiddleware);
+
+app.get('/api/entity-types', async (c) => {
+  const entityTypes = await readEntityTypeByUser(c.get("user").id);
+  return c.json({ entityTypes });
+})
+
+app.get('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  const entityType = await readEntityTypeByUser(c.get("user").id);
+  const filtered = entityType.filter(et => et.id === id);
+  return c.json({ entityType: filtered[0] || null });
+})
+
+app.post('/api/entity-types', async (c) => {
+  const body = await c.req.json();
+  await createEntityType({ ...body, userId: c.get("user").id });
+  return c.json({ success: true });
+})
+
+app.put('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  const body = await c.req.json();
+  await updateEntityType(id, { ...body, userId: c.get("user").id });
+  return c.json({ success: true });
+})
+
+app.delete('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  try {
+    await deleteEntityType(id, c.get("user").id);
+    return c.json({ success: true });
+  } catch (error: any) {
+    if (error.code === '23503') { // PostgreSQL FK violation
+      return c.json({
+        success: false,
+        error: "Cannot delete entity type that is in use by entities"
+      }, 400);
+    }
+    throw error;
+  }
+})
 
 export type AppType = typeof app;
 

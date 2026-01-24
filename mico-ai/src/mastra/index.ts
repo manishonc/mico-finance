@@ -6,12 +6,13 @@ import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { transactionAgent } from './agents/transaction-agent';
 import { financeWeatherNetworkAgent } from './agents/finance-weather-network-agent';
+import { notionAgent } from './agents/notion-agent';
 import { toolCallAppropriatenessScorer, completenessScorer, translationScorer } from './scorers/weather-scorer';
 import { micoFinanceMcp } from './mcp/mico-finance-mcp';
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent, transactionAgent, financeWeatherNetworkAgent },
+  agents: { weatherAgent, transactionAgent, financeWeatherNetworkAgent, notionAgent },
   mcpServers: { micoFinanceMcp },
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
   storage: new LibSQLStore({

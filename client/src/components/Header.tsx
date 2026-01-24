@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { useState } from 'react'
-import { Home, Menu, Wallet, X } from 'lucide-react'
+import { Home, Menu, Wallet, X, Tags } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { authClient } from '@/lib/auth-clients'
 
@@ -67,6 +67,32 @@ export default function Header() {
           >
             <Wallet size={20} />
             <span className="font-medium">Finance</span>
+          </Link>
+
+          <Link
+            to="/finance/entity"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <Wallet size={20} />
+            <span className="font-medium">Entities</span>
+          </Link>
+
+          <Link
+            to="/finance/entity-type"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <Tags size={20} />
+            <span className="font-medium">Entity Types</span>
           </Link>
         </nav>
 
