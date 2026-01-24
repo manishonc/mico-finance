@@ -135,7 +135,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="relative w-full h-screen bg-bg overflow-hidden flex items-center justify-center font-sans text-white selection:bg-primary selection:text-white">
+    <div className="relative w-full h-screen bg-background overflow-hidden flex items-center justify-center font-sans text-white selection:bg-primary selection:text-white">
       
       {/* --- Background Circuitry --- */}
       <CircuitLines />

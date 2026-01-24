@@ -116,9 +116,9 @@ export function LoginForm({
         </div>
 
         {/* Login Button */}
-        <Button 
+        <Button
           type="submit"
-          className="w-full bg-primary hover:bg-primary-hover text-white text-sm font-medium py-3 rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(0,112,243,0.3)] hover:shadow-[0_0_25px_rgba(0,112,243,0.5)] active:scale-[0.98]"
+          className="w-full bg-primary hover:bg-primary/90 text-white text-sm font-medium py-3 rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(0,112,243,0.3)] hover:shadow-[0_0_25px_rgba(0,112,243,0.5)] active:scale-[0.98]"
         >
           Login
         </Button>
