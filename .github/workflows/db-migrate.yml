@@ -21,7 +21,7 @@ jobs:
       - name: Run migrations (staging)
         run: bun run db:migrate
         env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          DATABASE_URL: postgresql://neondb_owner:npg_cvkLhfsZ7Od1@ep-square-dew-a1hnpv0u-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 
   migrate-production:
     name: Migrate Production DB
@@ -37,4 +37,4 @@ jobs:
       - name: Run migrations (production)
         run: bun run db:migrate
         env:
-          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          DATABASE_URL: REPLACE_WITH_PRODUCTION_DATABASE_URL
