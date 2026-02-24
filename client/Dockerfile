@@ -2,28 +2,26 @@
 FROM oven/bun:1 AS builder
 WORKDIR /app
 
-# Copy lockfile and manifests first for layer caching
-COPY bun.lock package.json ./
-COPY client/package.json ./client/
+# Copy lockfile and manifest first for layer caching
+COPY client/bun.lock client/package.json ./
 
-# Install all deps from root (bun workspaces)
+# Install deps
 RUN bun install --frozen-lockfile
 
 # Copy source
-COPY client/ ./client/
+COPY client/ ./
 
-# Build-time env vars for Vite (baked into JS bundle)
+# Build-time env var for Vite (baked into JS bundle)
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-WORKDIR /app/client
 RUN bun run build
 
 # Stage 2: runtime
 FROM oven/bun:1-slim AS runner
 WORKDIR /app
 
-COPY --from=builder /app/client/.output ./.output
+COPY --from=builder /app/.output ./.output
 
 ENV PORT=3000
 EXPOSE 3000
