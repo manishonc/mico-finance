@@ -1,0 +1,40 @@
+name: Database Migrations
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+
+jobs:
+  migrate-staging:
+    name: Migrate Staging DB
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Run migrations (staging)
+        run: bun run db:migrate
+        env:
+          DATABASE_URL: postgresql://neondb_owner:npg_cvkLhfsZ7Od1@ep-square-dew-a1hnpv0u-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+  migrate-production:
+    name: Migrate Production DB
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Run migrations (production)
+        run: bun run db:migrate
+        env:
+          DATABASE_URL: REPLACE_WITH_PRODUCTION_DATABASE_URL
