@@ -17,6 +17,56 @@ The client is a server-side rendered app (Nitro). It proxies `/api/**` requests 
 
 ---
 
+## Deployment Scenarios
+
+The two services are fully decoupled — they talk over public URLs, not Docker networking. This means the physical topology (same host vs. different hosts) does not change the configuration approach; only the URL values differ.
+
+Two env vars wire them together:
+
+| Variable | Set on | Purpose |
+|---|---|---|
+| `VITE_API_URL` | **Client** (build-time) | Where the client sends API requests |
+| `CLIENT_URL` | **Server** (runtime) | Allowed CORS origin; must match the client's public URL |
+
+### Scenario A — Both services on the same Coolify instance
+
+Coolify assigns a separate domain to each service even when they live on the same instance. From a config standpoint this is identical to deploying on different machines.
+
+```
+Coolify instance
+  ├── client service  →  https://app.example.com
+  └── server service  →  https://api.example.com
+```
+
+- Client build arg: `VITE_API_URL=https://api.example.com`
+- Server env var: `CLIENT_URL=https://app.example.com`
+
+### Scenario B — Services on different Coolify instances or different hosts
+
+Same config as Scenario A — just different machines. Set the same two vars pointing at each service's public domain.
+
+### Scenario C — Server only (client hosted elsewhere or not yet deployed)
+
+Deploy just the server service using sections 1–2 below. Set `CLIENT_URL` to wherever your client is hosted (Vercel, Netlify, another Coolify service, etc.). If the client isn't deployed yet, set a placeholder and update it when it is.
+
+```
+Coolify
+  └── server service  →  https://api.example.com
+
+Client → Vercel / Netlify / elsewhere  →  https://app.example.com
+```
+
+- Server env var: `CLIENT_URL=https://app.example.com`
+- Client build arg wherever it's deployed: `VITE_API_URL=https://api.example.com`
+
+### Scenario D — Client only (server already deployed elsewhere)
+
+Deploy just the client service using section 3 below. Provide `VITE_API_URL` pointing at the already-running server at build time.
+
+> **Important:** `VITE_API_URL` is baked into the JS bundle at build time. If the server URL ever changes, the client must be redeployed.
+
+---
+
 ## Prerequisites
 
 - A Coolify instance with Docker support
