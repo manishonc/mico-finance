@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { cn } from '@/lib/utils'
 
 interface EditableCellProps {
   value: string | number
@@ -72,13 +73,20 @@ export function EditableCell({
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
         onClick={(e) => e.stopPropagation()}
-        className={`block w-full min-w-0 appearance-none outline-none bg-transparent border-none p-0 m-0 font-inherit text-inherit ${className}`}
+        className={cn(
+          "block w-full min-w-0 appearance-none bg-input border border-border rounded shadow-sm",
+          "focus:border-primary focus:ring-2 focus:ring-primary/20 focus:shadow-md outline-none",
+          "p-0 m-0 font-inherit text-inherit text-sm",
+          "text-foreground placeholder:text-muted-foreground",
+          className
+        )}
         style={{
           lineHeight: 'inherit',
           width: '100%',
           minWidth: 0,
           maxWidth: '100%',
           boxSizing: 'border-box',
+          padding: '4px 6px',
         }}
       />
     )

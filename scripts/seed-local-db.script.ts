@@ -1,6 +1,6 @@
 import { Column } from "drizzle-orm";
 import { db } from "../server/db";
-import  * as schema from "../server/db/schema";
+import  * as schema from "../server/db/schemas/schema";
 import { seed } from "drizzle-seed";
 
 const seedLocalDb = async () => {

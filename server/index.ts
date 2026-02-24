@@ -1,62 +1,123 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { getTransactions, getTransactionWithTotalAmount, updateTransaction, createTransaction, getTransactionsByDateRange, getTransactionsByCategory, getTransactionSummary } from './db/queries'
+import { createEntity, readEntity, readEntityById, updateEntity, deleteEntity, readEntityByUser, createEntityType, readEntityTypeByUser, readEntityTypeById, updateEntityType, deleteEntityType } from './db/queries'
+import { auth } from './lib/auth';
+import { authMiddleware } from './middleware/aut.middleware';
+import { HonoEnv } from './types';
 
-const app = new Hono()
 
-app.use('/*', cors())
+const app = new Hono<HonoEnv>()
 
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',')
+  : ['http://localhost:5000', 'http://localhost:3000']
+
+app.use(
+  '/api/*',
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+)
+
+// Auth endpoints - better-auth handles its own CORS
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  return auth.handler(c.req.raw);
+});
+
+
+// Root endpoint
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.text('Welcome to the Mico Finance API')
 })
 
-// Transactions
-app.get('/api/transactions', async (c) => {
-  const transactions = await getTransactions();
-  const totalAmount = await getTransactionWithTotalAmount();
-  return c.json({ transactions, totalAmount });
+// Entity CRUD endpoints - protected routes
+app.use('/api/entities/*', authMiddleware);
+
+app.get('/api/entities', async (c) => {
+  const entities = await readEntityByUser(c.get("user").id);
+  return c.json({ entities });
 })
 
-app.post('/api/transactions', async (c) => {
+app.get('/api/entities/:id', async (c) => {
+  const id = c.req.param('id');
+  const entity = await readEntityByUser(c.get("user").id);
+  const filtered = entity.filter(e => e.id === id);
+  return c.json({ entity: filtered[0] || null });
+})
+
+app.post('/api/entities', async (c) => {
   const body = await c.req.json();
-  // Convert date string to Date object for Drizzle ORM
-  if (typeof body.date === 'string') {
-    body.date = new Date(body.date);
-  }
-  await createTransaction(body);
+  await createEntity({ ...body, userId: c.get("user").id });
   return c.json({ success: true });
 })
 
-// Query transactions with filters
-app.post('/api/transactions/query', async (c) => {
-  const body = await c.req.json();
-  const { startDate, endDate, category } = body;
-
-  let start: Date | undefined;
-  let end: Date | undefined;
-
-  if (startDate) {
-    start = new Date(startDate);
-  }
-  if (endDate) {
-    end = new Date(endDate);
-  }
-
-  const summary = await getTransactionSummary(start, end, category);
-  return c.json({ summary: summary[0] || { totalAmount: null, count: 0 } });
-})
-
-app.put('/api/transactions/:id', async (c) => {
+app.put('/api/entities/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
-  const updates = { ...body };
-  if (typeof updates.date === 'string') {
-    updates.date = new Date(updates.date);
-  }
-  await updateTransaction({ id, ...updates });
+  await updateEntity(id, { ...body, userId: c.get("user").id });
   return c.json({ success: true });
 })
 
-export type AppType = typeof app
+app.delete('/api/entities/:id', async (c) => {
+  const id = c.req.param('id');
+  await deleteEntity(id, c.get("user").id);
+  return c.json({ success: true });
+})
 
-export default app
+
+
+
+// read entity by user
+app.get('/api/entities/user', async (c) => {
+  const entities = await readEntityByUser(c.get("user").id);
+  return c.json({ entities });
+});
+
+// EntityType CRUD endpoints - protected routes
+app.use('/api/entity-types/*', authMiddleware);
+
+app.get('/api/entity-types', async (c) => {
+  const entityTypes = await readEntityTypeByUser(c.get("user").id);
+  return c.json({ entityTypes });
+})
+
+app.get('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  const entityType = await readEntityTypeByUser(c.get("user").id);
+  const filtered = entityType.filter(et => et.id === id);
+  return c.json({ entityType: filtered[0] || null });
+})
+
+app.post('/api/entity-types', async (c) => {
+  const body = await c.req.json();
+  await createEntityType({ ...body, userId: c.get("user").id });
+  return c.json({ success: true });
+})
+
+app.put('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  const body = await c.req.json();
+  await updateEntityType(id, { ...body, userId: c.get("user").id });
+  return c.json({ success: true });
+})
+
+app.delete('/api/entity-types/:id', async (c) => {
+  const id = c.req.param('id');
+  try {
+    await deleteEntityType(id, c.get("user").id);
+    return c.json({ success: true });
+  } catch (error: any) {
+    if (error.code === '23503') { // PostgreSQL FK violation
+      return c.json({
+        success: false,
+        error: "Cannot delete entity type that is in use by entities"
+      }, 400);
+    }
+    throw error;
+  }
+})
+
+export type AppType = typeof app;
+
+export default app;

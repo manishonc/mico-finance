@@ -15,12 +15,7 @@ const config = defineConfig({
     },
   },
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-    },
+    port: 5000,
   },
   plugins: [
     devtools(),

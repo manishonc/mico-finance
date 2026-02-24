@@ -6,7 +6,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-import Header from '../components/Header'
+import { NavigationLayout } from '../modules/navigation'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -29,7 +29,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Mico Finance',
+        title: 'Life OS',
       },
     ],
     links: [
@@ -45,13 +45,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
       <body>
-        <Header />
-        {children}
+        <NavigationLayout>
+          {children}
+        </NavigationLayout>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

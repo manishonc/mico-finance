@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TransactionIndexRouteImport } from './routes/transaction/index'
+import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
+import { Route as FinanceEntityIndexRouteImport } from './routes/finance/entity/index'
+import { Route as FinanceEntityTypeIndexRouteImport } from './routes/finance/entity-type/index'
+import { Route as FinanceDashboardIndexRouteImport } from './routes/finance/dashboard/index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiTqTodosRouteImport } from './routes/demo/api.tq-todos'
@@ -26,14 +29,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TransactionIndexRoute = TransactionIndexRouteImport.update({
-  id: '/transaction/',
-  path: '/transaction/',
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceEntityIndexRoute = FinanceEntityIndexRouteImport.update({
+  id: '/finance/entity/',
+  path: '/finance/entity/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceEntityTypeIndexRoute = FinanceEntityTypeIndexRouteImport.update({
+  id: '/finance/entity-type/',
+  path: '/finance/entity-type/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceDashboardIndexRoute = FinanceDashboardIndexRouteImport.update({
+  id: '/finance/dashboard/',
+  path: '/finance/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -80,11 +98,14 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/transaction': typeof TransactionIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/finance/dashboard': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type': typeof FinanceEntityTypeIndexRoute
+  '/finance/entity': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -93,11 +114,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/transaction': typeof TransactionIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/finance/dashboard': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type': typeof FinanceEntityTypeIndexRoute
+  '/finance/entity': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -107,11 +131,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/transaction/': typeof TransactionIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/finance/dashboard/': typeof FinanceDashboardIndexRoute
+  '/finance/entity-type/': typeof FinanceEntityTypeIndexRoute
+  '/finance/entity/': typeof FinanceEntityIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -122,11 +149,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/demo/tanstack-query'
-    | '/transaction'
+    | '/auth'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/finance/dashboard'
+    | '/finance/entity-type'
+    | '/finance/entity'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -135,11 +165,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/demo/tanstack-query'
-    | '/transaction'
+    | '/auth'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/finance/dashboard'
+    | '/finance/entity-type'
+    | '/finance/entity'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -148,11 +181,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/demo/tanstack-query'
-    | '/transaction/'
+    | '/auth/'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/finance/dashboard/'
+    | '/finance/entity-type/'
+    | '/finance/entity/'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -162,11 +198,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  TransactionIndexRoute: typeof TransactionIndexRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoApiTqTodosRoute: typeof DemoApiTqTodosRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
+  FinanceDashboardIndexRoute: typeof FinanceDashboardIndexRoute
+  FinanceEntityTypeIndexRoute: typeof FinanceEntityTypeIndexRoute
+  FinanceEntityIndexRoute: typeof FinanceEntityIndexRoute
   DemoStartSsrDataOnlyRoute: typeof DemoStartSsrDataOnlyRoute
   DemoStartSsrFullSsrRoute: typeof DemoStartSsrFullSsrRoute
   DemoStartSsrSpaModeRoute: typeof DemoStartSsrSpaModeRoute
@@ -182,11 +221,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/transaction/': {
-      id: '/transaction/'
-      path: '/transaction'
-      fullPath: '/transaction'
-      preLoaderRoute: typeof TransactionIndexRouteImport
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/tanstack-query': {
@@ -194,6 +233,27 @@ declare module '@tanstack/react-router' {
       path: '/demo/tanstack-query'
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance/entity/': {
+      id: '/finance/entity/'
+      path: '/finance/entity'
+      fullPath: '/finance/entity'
+      preLoaderRoute: typeof FinanceEntityIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance/entity-type/': {
+      id: '/finance/entity-type/'
+      path: '/finance/entity-type'
+      fullPath: '/finance/entity-type'
+      preLoaderRoute: typeof FinanceEntityTypeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance/dashboard/': {
+      id: '/finance/dashboard/'
+      path: '/finance/dashboard'
+      fullPath: '/finance/dashboard'
+      preLoaderRoute: typeof FinanceDashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/server-funcs': {
@@ -258,11 +318,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-  TransactionIndexRoute: TransactionIndexRoute,
+  AuthIndexRoute: AuthIndexRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoApiTqTodosRoute: DemoApiTqTodosRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
+  FinanceDashboardIndexRoute: FinanceDashboardIndexRoute,
+  FinanceEntityTypeIndexRoute: FinanceEntityTypeIndexRoute,
+  FinanceEntityIndexRoute: FinanceEntityIndexRoute,
   DemoStartSsrDataOnlyRoute: DemoStartSsrDataOnlyRoute,
   DemoStartSsrFullSsrRoute: DemoStartSsrFullSsrRoute,
   DemoStartSsrSpaModeRoute: DemoStartSsrSpaModeRoute,
