@@ -4,6 +4,10 @@ import { openAPI } from "better-auth/plugins";
 import { db } from "../db";
 import * as authSchema from "../db/schemas/auth-schema";
 
+const trustedOriginsList = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',')
+    : ['http://localhost:5000', 'http://localhost:3000']
+
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL,
     database: drizzleAdapter(db, {
@@ -22,8 +26,5 @@ export const auth = betterAuth({
     plugins: [
         openAPI(),
     ],
-    trustedOrigins: [
-        "http://localhost:5000",
-        "http://localhost:3000",
-    ],
+    trustedOrigins: trustedOriginsList,
 });

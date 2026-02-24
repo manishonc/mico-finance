@@ -8,10 +8,14 @@ import { HonoEnv } from './types';
 
 const app = new Hono<HonoEnv>()
 
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',')
+  : ['http://localhost:5000', 'http://localhost:3000']
+
 app.use(
   '/api/*',
   cors({
-    origin: ['http://localhost:5000', 'http://localhost:3000'],
+    origin: allowedOrigins,
     credentials: true,
   })
 )

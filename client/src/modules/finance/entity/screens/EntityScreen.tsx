@@ -24,7 +24,7 @@ interface EntityType {
   name: string
 }
 
-const API_URL = 'http://localhost:3000'
+const API_URL = import.meta.env.VITE_API_URL
 
 const fetchEntities = async (): Promise<Entity[]> => {
   const res = await fetch(`${API_URL}/api/entities`, {

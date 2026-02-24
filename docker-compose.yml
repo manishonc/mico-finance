@@ -1,22 +1,28 @@
 services:
-  postgres:
-    image: postgres:18.1
-    container_name: mico-finance-postgres
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL}
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mico_finance
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - "3000:3000"
+    environment:
+      - PORT=3000
 
-volumes:
-  postgres_data:
-    driver: local
+  # TODO: uncomment when server deployment is ready
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: server/Dockerfile
+  #   restart: unless-stopped
+  #   ports:
+  #     - "4000:3000"
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+  #     - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+  #     - CLIENT_URL=${CLIENT_URL}
+  #     - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+  #     - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
