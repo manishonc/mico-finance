@@ -14,4 +14,4 @@ COPY --from=builder /app .
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["bun", "run", "--hot", "server/index.ts"]
+CMD ["bun", "server/index.ts"]

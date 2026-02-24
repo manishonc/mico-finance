@@ -13,6 +13,8 @@ Coolify
 
 The client is a server-side rendered app (Nitro). It proxies `/api/**` requests to the server at runtime. There is no Docker network dependency between the two — they communicate over their public URLs.
 
+`docker-compose.yaml` at the repo root defines both services (client on host port 3000, server on host port 4000) and can be used for local Docker testing before pushing to Coolify.
+
 ---
 
 ## Prerequisites
