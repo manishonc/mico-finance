@@ -37,4 +37,4 @@ jobs:
       - name: Run migrations (production)
         run: bun run db:migrate
         env:
-          DATABASE_URL: REPLACE_WITH_PRODUCTION_DATABASE_URL
+          DATABASE_URL: postgresql://neondb_owner:npg_cvkLhfsZ7Od1@ep-rough-haze-a1b02aso-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
